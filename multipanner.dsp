@@ -9,15 +9,15 @@ deg2rad = * (ma.PI/180);
 rad2deg = * (180/ma.PI);
 
 
-prad = hslider("Radiants",0,-89,+89,1)+90 : deg2rad : si.smoo;
+prad = hslider("Radiants",0,-89.9,+89.9,0.1)+90 : deg2rad : si.smoo;
 pradR = prad : rad2deg : (_-180) : deg2rad;
-pinc = hslider("Inclination",55,-90,+90,1) : deg2rad : si.smoo;
+pinc = hslider("Inclination",55,0,+90,1) : deg2rad : si.smoo;
 pdismic = hslider("Distance Between Microphones in cm",100,10,300,1) : si.smoo;
 pdissig = hslider("Distance From Source in cm",50,10,300,1) : si.smoo;
 
 //calculated radiants
-disL = sqrt((pdissig^2) + ((pdismic/2)^2) - 2*(pdissig) * (pdismic/2) * cos(prad));
-disR = sqrt((pdissig^2) + ((pdismic/2)^2) - 2*(pdissig) * (pdismic/2) * cos(pradR));
+disL = sqrt((pdissig^2) + ((pdismic/2)^2) - 2*(pdissig) * (pdismic/2) * cos(prad)) <: attach(_,abs : vbargraph("Left Distance[style:numerical]",0,3000));
+disR = sqrt((pdissig^2) + ((pdismic/2)^2) - 2*(pdissig) * (pdismic/2) * cos(pradR)) <: attach(_,abs : vbargraph("Right Distance [style:numerical]",0,3000));
 
 //calcolo angolo L
 betaL = acos(( ((pdismic/2)^2) + (disL)^2 - pdissig^2 ) / (2*(pdismic/2)*disL)) : rad2deg;
@@ -55,4 +55,4 @@ with{
 };
 
 vstin = _ , !;
-process = _ <: panner(compbetaL,compbetaR,pinc,_) : delayLR(delayL,delayR,_) : attenuation(disL,disR,_); //il _ nella funzione è 
+process = no.pink_noise <: panner(compbetaL,compbetaR,pinc,_) : delayLR(delayL,delayR,_) : attenuation(disL,disR,_) ; //il _ nella funzione è 
