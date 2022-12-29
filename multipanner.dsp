@@ -8,10 +8,10 @@ ts = library("12ts.lib");
 deg2rad = * (ma.PI/180);
 rad2deg = * (180/ma.PI);
 
-prad = hslider("Radiants From Center in degrees",0,-89.9,+89.9,0.1)+90 : deg2rad : si.smoo;
+prad = hslider("[3]Radiants From Center in degrees",0,-89.9,+89.9,0.1)+90 : deg2rad : si.smoo;
 pradR = prad : rad2deg : (_-180) : deg2rad;
-pinc = hslider("Inclination Between Microphones in degrees",55,0,+90,1) : deg2rad : si.smoo;
-pdismic = hslider("Distance Between Microphones in cm",100,10,300,1) : si.smoo;
+pinc = hslider("[2]Microphones Inclination in degrees",55,0,+90,1) : deg2rad : si.smoo;
+pdismic = hslider("[1]Distance Between Microphones in cm",100,10,300,1) : si.smoo;
 pdissig = hslider("h:Distances From Source in cm/[0]Center",50,10,300,1) : si.smoo;
 
 //calculated radiants
@@ -34,7 +34,7 @@ delayR = ((disR/100)/sspeed)*ma.SR;
 panner(radL,radR,inc,x) = l(radL,inc, x), r(radR, inc, x)
 with{
     
-    pp = vslider("Mic Mode[style:menu{'Cardioid':0;'Omni':1}]",0,0,1,1);
+    pp = vslider("[0]Mic Mode[style:menu{'Cardioid':0;'Omni':1}]",0,0,1,1);
 
     //la divisione in bande serve a simulare meglio le capsule microfoniche e la sensibilità alle varie frequenze in base all'angolo di incidenza
     crossover(x) = x : fi.crossover4LR4(1500,7000,15000) : si.bus(4);
