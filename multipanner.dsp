@@ -8,7 +8,7 @@ ts = library("12ts.lib");
 deg2rad = * (ma.PI/180);
 rad2deg = * (180/ma.PI);
 
-prad = hslider("[3]Radiants From Center in degrees",0,-89.9,+89.9,0.1)+90 : deg2rad : si.smoo;
+prad = hslider("[3]Inclination From Center in degrees",0,-89.9,+89.9,0.1)+90 : deg2rad : si.smoo;
 pradR = prad : rad2deg : (_-180) : deg2rad;
 pinc = hslider("[2]Microphones Inclination in degrees",55,0,+90,1) : deg2rad : si.smoo;
 pdismic = hslider("[1]Distance Between Microphones in cm",100,10,300,1) : si.smoo;
