@@ -8,13 +8,12 @@ ts = library("12ts.lib");
 deg2rad = * (ma.PI/180);
 rad2deg = * (180/ma.PI);
 
+pinc = nentry("[2]Microphones Inclination in degrees",55,0,+90,1) : deg2rad : si.smoo;
+pdismic = nentry("[1]Distance Between Microphones in cm",17,10,1000,1) : si.smoo;
 
-pinc = hslider("[2]Microphones Inclination in degrees",55,0,+90,1) : deg2rad : si.smoo;
-pdismic = hslider("[1]Distance Between Microphones in cm",100,10,300,1) : si.smoo;
-
-cd = hslider("[3]X in cm",0,-600,600,1) : si.smoo;
-da = hslider("[3]Y in cm",100,10,600,1) : si.smoo;
-ab = hslider("[3]Z in cm",100,0,600,1) : si.smoo;
+cd = nentry("[3]X in cm",0,-1000,1000,1) : si.smoo;
+da = nentry("[3]Y in cm",100,0,1000,1) + 0.000001 : si.smoo;
+ab = nentry("[3]Z in cm",100,0,1000,1) + 0.000001 : si.smoo;
 
 ca = sqrt(cd ^ 2 + da ^ 2);
 xsign = cd : ma.signum;
@@ -23,7 +22,9 @@ cb = sqrt(ab ^ 2 + ca ^ 2);
 db = sqrt(ab ^ 2 + da ^ 2);
 
 prad = acos((cb ^ 2 + db ^ 2 - cd ^ 2)/(2 * cb * db)) : rad2deg : _ * xsign : (_+90) : deg2rad;
-pradR = prad : rad2deg : (180-_) : deg2rad;
+pradR = prad : rad2deg : (_-180) : deg2rad;
+
+zrad = acos((cb^2 + ab^2 - ca^2)/(2 * cb * ab)) : rad2deg : 90-_ : deg2rad;
 
 pdissig = cb;
 
@@ -43,22 +44,21 @@ sspeed = 343; //velocità del suono
 delayL = ((disL/100)/sspeed)*ma.SR;
 delayR = ((disR/100)/sspeed)*ma.SR;
 
-
+    
 panner(radL,radR,inc,x) = l(radL,inc, x), r(radR, inc, x)
 with{
     
     pp = vslider("[0]Mic Mode[style:menu{'Cardioid':0;'Omni':1}]",0,0,1,1);
 
     //la divisione in bande serve a simulare meglio le capsule microfoniche e la sensibilità alle varie frequenze in base all'angolo di incidenza
-    crossover(x) = x : fi.crossover4LR4(1500,7000,15000) : si.bus(4);
+    crossover(x) = x : fi.crossover2LR4(10000) : si.bus(2);
 
-    band1(rad,inclination,pp,x) = x <: ((0.6 * _) + (0.4 * _ * cos(rad))*cos(inclination))*(1-pp) + (_*pp);
-    band2(rad,inclination,pp,x) = x <: ((0.5 * _) + (0.5 * _ * cos(rad))*cos(inclination))*(1-pp) + (_*pp);
-    band3(rad,inclination,pp,x) = x <: ((0.4 * _) + (0.6 * _ * cos(rad))*cos(inclination))*(1-pp) + (_*pp);
-    band4(rad,inclination,pp,x) = x <: ((0.33 * _) + (0.67 * _ * cos(rad))*cos(inclination))*(1-pp) + (_*pp);
+    band1(rad,inclination,pp,x) = x <: ((0.5 * _) + (0.5 * _ * cos(rad))*cos(inclination))*cos(zrad)*(1-pp) + (_*pp);
+    band2(rad,inclination,pp,x) = x <: ((0.4 * _) + (0.6 * _ * cos(rad))*cos(inclination))*cos(zrad)*(1-pp) + (_*pp);
 
-    l(radL,inc, x) = crossover(x) : band1(radL,inc,pp,_), band2(radL,inc,pp,_) , band3(radL,inc,pp,_) , band4(radL,inc,pp,_) :> _;
-    r(radR,inc, x) = crossover(x) : band1(radR,-inc,pp,_), band2(radR,-inc,pp,_) , band3(radR,-inc,pp,_) , band4(radR,-inc,pp,_) :> _;
+
+    l(radL,inc, x) = crossover(x) : band1(radL,inc,pp,_), band1(radL,inc,pp,_) :> _;
+    r(radR,inc, x) = crossover(x) : band1(radR,-inc,pp,_), band1(radR,-inc,pp,_) :> _;
 };
 
 delayLR(delayL,delayR,x) = l(delayL,x), r(delayR,x) 
@@ -76,4 +76,5 @@ with{
 };
 
 vstin = _ , !;
-process = no.pink_noise <: panner(compbetaL,compbetaR,pinc,_) : delayLR(delayL,delayR,_) : attenuation(disL,disR,_);
+
+process = vstin <: panner(compbetaL,compbetaR,pinc,_) : delayLR(delayL,delayR,_) : attenuation(disL,disR,_);
