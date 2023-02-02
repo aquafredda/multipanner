@@ -1,0 +1,17 @@
+import("stdfaust.lib");
+ts = library("12ts.lib");
+
+deg2rad = * (ma.PI/180);
+rad2deg = * (180/ma.PI);
+
+//teorema di pitagora
+pit(a,b) = sqrt(a ^ 2 + b ^ 2);
+
+//teorema di carnot per il calcolo dell'angolo compreso tra due lati. l1 e l2 sono i lati in cui è compreso l'angolo da calcolare, l3 è il lato opposto
+acarnot(l1,l2,l3) = acos((l1 ^ 2 + l2 ^ 2 - l3 ^ 2)/(2 * l1 * l2));
+
+//teorema di carnot per il calcolo del lato opposto ad un angolo già dato e i due contigui. l1 e l2 sono i lati, rad è l'angolo opposto
+lcarnot(l1,l2,rad) = sqrt((l1^2) + ((l2^2) - 2*(l1) * (l2) * cos(rad)));
+
+//simulatore figura polare
+ppattern(x,pp,inc,dvg) = ((1-pp) * x) + (pp * x * cos(inc))*cos(dvg);
