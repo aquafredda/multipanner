@@ -7,22 +7,23 @@ import("12ts.lib");
 pp = hslider("[00]Mic Mode (0 Omni | 0.5 Cardioid)",0,0,0.5,0.5);
 dst = hslider("[01]Distance Between Microphones in cm",17,10,1000,1) : si.smoo; 
 dvg = hslider("[02]Divergence in degrees",55,0,+90,1) : ts.deg2rad : si.smoo; //apertura
-cd = hslider("[03]X in cm",0,-1000,1000,1) : si.smoo;
-da = hslider("[03]Y in cm",100,0,1000,1) + 0.000001 : si.smoo;
-ab = hslider("[03]Z in cm",100,0,1000,1) + 0.000001 : si.smoo;
+cd = hslider("[03]X in cm",0,-1000,1000,1) : si.smoo ;
+da = hslider("[03]Y in cm",100,0,1000,1) : si.smoo : max(ma.EPSILON);
+ab = hslider("[03]Z in cm",100,5,1000,1) : si.smoo : max(ma.EPSILON);
 
 
 //OUTPUT DISTANZA REALE TRA I MICROFONI SULLE TRE COORDINATE
 xyz2dst(cd,da,ab) = cb(ab,ca)
 with{
     ca = ts.pit(cd,da);
-    cb(ab,ca) = sqrt(ab ^ 2 + ca ^ 2);
+    cb(ab,ca) = ts.pit(ab,ca);
 };
 
 //OUTPUT RADIANTI AZIMUT REALI
 dst2arad(cd,da,ab) = arad(cb,db,cd,xsign)
 with{
     cb = xyz2dst(cd,da,ab);
+
     xsign = cd : ma.signum;
     db = ts.pit(ab,da);
     arad(cb,db,cd,xsign) = ts.acarnot(cb,db,cd) : ts.rad2deg : _ * xsign : (_+90) : ts.deg2rad;
@@ -54,7 +55,7 @@ with {
 delaysig(sig,dst) = output(sig,delinsamples)
 with {
     sspeed = 321;
-    delinsamples = ((dst/100)/sspeed)*ma.SR;
+    delinsamples = ((dst/100)/sspeed)*ma.SR : int;
     output(sig,delinsamples) = sig : de.delay(10000,delinsamples);
 };
 
@@ -81,4 +82,4 @@ with{
     r(sig,pp,incR,dvg,dstR) = panner(sig,pp,incR,-dvg) : delaysig(_,dstR) : att(_,dstR);
 };
 
-process = no.pink_noise, cd, da, ab, dst, dvg, pp : multipanner;
+process = multipanner(no.pink_noise,cd, da, ab, dst, dvg, pp);
