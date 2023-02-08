@@ -56,10 +56,11 @@ backgroundcolor=\color{lbcolor},
   }
 
 
-\title{Multipanner - Creazione di un panner per coppie spaziate}
+%\title{Multipanner - Creazione di un panner per coppie spaziate}
+\title{Multipanner \\ un modello matematico per la sintesi digitale di coppie stereofoniche semi-spaziate}
 
 \author{Gabriele Acquafredda$^{a}$$^{*}$ \\
-    \small $^{a}$2° Anno di Tecnica Del Suono, Primo livello, Dipartimento di Musica Elettronica\\
+    \small $^{a}$2° Anno di Tecnico del Suono, Primo livello, Dipartimento di Musica Elettronica\\
     \small  Conservatorio di Musica Niccolò Piccinni, Bari, Italia\\
 }
 
@@ -70,17 +71,30 @@ backgroundcolor=\color{lbcolor},
 \maketitle
 
 \begin{abstract} 
-    \noindent La presente documentazione riguarda la risoluzione di una problematica riscontrata durante una sessione di registrazione in cui v'è stata una coppia spaziata ORTF come main: esiste un modo per mappare lo spazio precisamente mettendolo in relazione con un main ORTF senza la necessità di agire nella post-produzione con degli artefatti e delle approssimazioni? La risposta è stata la costruzione di un panner che ragiona in coordinate spaziali e mette in stretta correlazione ogni spot messo nello spazio con la coppia main, servendoci di poche regole matematiche, in particolar modo trigonometriche e della piattaforma di sviluppo FAUST.
+    \noindent Posto l'esempio di una sessione di registrazione orchestrale, o di ensemble, in cui si faccia uso di un punto di ripresa stereofonico (definito MAIN) e di ulteriori punti di ripresa sia stereo, mediante ulteriori coppie stereofoniche, che SPOT, mediante ripresa monofonica, l'impiego del panning di ampiezza implementato nei tradizionali mixer, sia hardware che software, non presenta alcuna strategia di trattamento del panorama stereofonico sintetizzato dal panner in conformità con quanto operato fisicamente dalla configurazione stereofonica MAIN scelta.
+
+La presente ricerca affronta tale problematica ponendo come obiettivo l'integrazione dei punti di ripresa SPOT con una configurazione MAIN scelta: è possibile mappare lo spazio ripreso da molteplici microfoni all'interno dell'orchestra/ensemble in correlazione con un MAIN?
+
+% esiste un modo per mappare lo spazio precisamente mettendolo in relazione con un main ORTF senza la necessità di agire nella post-produzione con degli artefatti e delle approssimazioni?
+
+% la tua è post-produzione con artefatti e approssimazioni… ti seghi le gambe da solo?
+
+La presente ricerca propone la modellazione matematica come principio implementativo di un panner che mediante coordinate spaziali mette in correlazione ogni punto di ripresa SPOT con la coppia MAIN.
 \end{abstract}
 
-\section{La problematica - Perché adoperare il Multipanner}
-Stiamo registrando un'orchestra e abbiamo 10 microfoni che mappano lo spazio per sezioni. Abbiamo un microfono per le viole, uno per i contrabbassi ecc. Come coppia main adoperiamo un ORTF che ci riprende sia l'orchestra nella sua interezza che, logicamente, l'ambiente circostante.
-Una volta terminato il lavoro di registrazione, importiamo tutte le registrazioni sulla nostra DAW per cominciare a lavorarci. Tutti gli spot che abbiamo adoperato per le sezioni sono logicamente mono, quindi abbiamo la necessità di sincronizzarli con il main per poi posizionarli nell'immagine stereo.
-Il panner tradizionale delle DAW, però, non consente né di applicare dei ritardi (se non aggiungendo degli appositi plugin), né di applicare dei ritardi tra i canali di SX e DX - cosa che, nel modello fisico dell'ORTF è naturale: se una sorgente proviene da SX, il canale di DX sarà leggermente sfasato rispetto al canale di SX, ove logicamente la sorgente "arriverà" prima. 
-Inoltre il panner tradizionale delle DAW non ragiona con le figure polari del nostro ORTF. Ciò vuol dire che il fatto di stare a n gradi a SX o DX non influenzerà direttamente la resa sonora del nostro panning.
-Il panner tradizionale, insomma, ragiona solo in termini di ampiezza di L e di R, non dandoci una vera e propria informazione stereofonica, ma solo un'approssimazione di questa. Un vero panner per mappare lo spazio deve, conseguentemente, non solo ragionare in termini di ampiezza, ma anche in termini di tempo e di fase, in modo da simulare matematicamente (quindi non fisicamente) in tutto e per tutto il comportamento di una sorgente sonora posizionata nello spazio in correlazione ad un dato punto di riferimento. Il punto di riferimento, nel nostro caso, diventa il centro della nostra coppia spaziata, sia questa ORTF, NOS, AB ecc.
+%\section{La problematica - Perché adoperare il Multipanner} % che titolo è? e soprattutto che è un multipanner? lo sai solo tu, ed è presto per intitolargli qualsiasi cosa. e soprattutto, non è una guida per fonici in stile cubase magazine… prima spieghi il problema e poi lo risolvi, senza semplificare e senza dare nessuna spiegazione sulla sessione di registrazione. Il tuo è un raginamento in astratto. 
 
-\section{Concettualizzazione}
+
+%Stiamo registrando un'orchestra e abbiamo 10 microfoni che mappano lo spazio per sezioni. Abbiamo un microfono per le viole, uno per i contrabbassi ecc. Come coppia main adoperiamo un ORTF che ci riprende sia l'orchestra nella sua interezza che, logicamente, l'ambiente circostante.
+%Una volta terminato il lavoro di registrazione, importiamo tutte le registrazioni sulla nostra DAW per cominciare a lavorarci. Tutti gli spot che abbiamo adoperato per le sezioni sono logicamente mono, quindi abbiamo la necessità di sincronizzarli con il main per poi posizionarli nell'immagine stereo.
+%Il panner tradizionale delle DAW, però, non consente né di applicare dei ritardi (se non aggiungendo degli appositi plugin), né di applicare dei ritardi tra i canali di SX e DX - cosa che, nel modello fisico dell'ORTF è naturale: se una sorgente proviene da SX, il canale di DX sarà leggermente sfasato rispetto al canale di SX, ove logicamente la sorgente "arriverà" prima. 
+%Inoltre il panner tradizionale delle DAW non ragiona con le figure polari del nostro ORTF. Ciò vuol dire che il fatto di stare a n gradi a SX o DX non influenzerà direttamente la resa sonora del nostro panning.
+%Il panner tradizionale, insomma, ragiona solo in termini di ampiezza di L e di R, non dandoci una vera e propria informazione stereofonica, ma solo un'approssimazione di questa. Un vero panner per mappare lo spazio deve, conseguentemente, non solo ragionare in termini di ampiezza, ma anche in termini di tempo e di fase, in modo da simulare matematicamente (quindi non fisicamente) in tutto e per tutto il comportamento di una sorgente sonora posizionata nello spazio in correlazione ad un dato punto di riferimento. Il punto di riferimento, nel nostro caso, diventa il centro della nostra coppia spaziata, sia questa ORTF, NOS, AB ecc.
+
+%\section{Concettualizzazione}
+\section{Modello Matematico}
+
+Breve introduzione alla problematica da te affrontata. Se parli da fonico, io cancello.
 
     \subsection{Le 3 dimensioni}
     Il panner tradizionale delle DAW ragiona sulla differenza di ampiezza tra L e R. Nel nostro caso, abbiamo la necessità di costruire una mappa che sia tridimensionale per poi applicarla su ciascuno SPOT. Preso, quindi, come riferimento il punto $\left[0,0,0\right]$, nonché il centro della nostra coppia spaziata e preso un punto dello spazio che identifica il nostro microfono spot $\left[x_a,y_a,\Delta z_a\right]$, dobbiamo permettere al nostro programma di Faust di calcolare in autonomia la distanza effettiva tra $\left[0,0,0\right]$ e $\left[x_a,y_a,\Delta z_a\right]$ e l'angolo di incidenza azimutale. Per questa operazione, disponiamo un semplice disegno tecnico che descrive la situazione:
@@ -255,16 +269,27 @@ process = multipanner(_,cd, da, ab, dst, dvg, pp);
 \section{Differenze con un panner tradizionale}
     \subsection{Cenni sulla stereofonia}
     
+    NON PUOI METTERE CENNI STORICI ALLA FINE DEL PAPER. SE HAI BISOGNO DI COSE PRELIMINARI VANNO ALL'INIZIO. 
+    
+    IN OGNI CASO NON PUOI DIRE CAGATE! UN PANNER E UN BALANCE SONO DUE OGGETTI DIVERSI. 
+    
     Un panner tradizionale LR - meglio detto balance, ha come unica variabile la differenza d'ampiezza tra sinistra a destra. È facile intuire che questo potrebbe essere molto limitante in quanto non ci da una informazione stereofonica. La stessa parola "stereofonica" deriva dal greco antico, in particolare dall'unione delle parole "sterèos" (in italiano "stabile", "solido", ma anche "spaziale", "tridimensionale") e "phonè" (in italiano "suono"). La percezione della tridimensionalità del suono nello spazio per l'uoomo è data da tre parametri fondamentali, ovverosia ITD (Interaural Time Difference), ILD (Interaural Level Difference), DDF (Direction Dependent Filter). La prima riguarda la differenza di tempo che intercorre tra l'orecchio sinistro e quello destro che, la seconda riguarda l'ampiezza e la terza riguarda l'alterazione del contenuto spettrale percepito da Sx e Dx in base alla posizione della sorgente.
+    
+    NON È PROPRIAMENTE COSì E NON è CHIARITO COME QUESTI (CHE NON SONO PRETTAMENTE PARAMETRI) INFLUISCANO SULLA PERCEZIONE DI STEREOFONIA O MENO DI UN PANNER TRADIZIONALE.
+    
     Poiché l'obiettivo è quello di fornire uno strumento che adoperi sul panorama stereo, è importante tener conto non solo della fisicità della coppia stereo, ma anche di tutti i parametri prettamente percettivi della stereofonia. Infatti il progetto non solo nasce come strumento da applicare per la costruzione di un panorama stereo verosimile ad una coppia ORTF, ma anche come strumento creativo adoperabile a fini tecnici e/o compositivi.
 
     \subsection{Le variabili}
-    Prendendo in considerazione quanto detto su ITD, ILD e DDF, comprendiamo che non è sufficiente descrivere un comportamento stereofonico basandosi solo su unico parametro come avviene nel panner tradizionale. Difatti nel nostro caso abbiamo provveduto non solo a differenziare l'ampiezza, ma anche a fornire una differenza di tempo tra L e R e una spettrale. Così facendo ampliamo le possibilità di utilizzo del progetto che, come già accennato, può anche essere utilizzato a fini creativi.
+    Prendendo in considerazione quanto detto su ITD, ILD e DDF, comprendiamo che non è sufficiente descrivere un comportamento stereofonico basandosi solo su unico parametro come avviene nel panner tradizionale.
+    
+    LO SCOPO DI QUESTA RICERCA NON è SMERDARE IL PANNER MA CREARNE UNO CHE DIALOGHI CON LA COPPIA MAIN.
+    
+    Difatti nel nostro caso abbiamo provveduto non solo a differenziare l'ampiezza, ma anche a fornire una differenza di tempo tra L e R e una spettrale. Così facendo ampliamo le possibilità di utilizzo del progetto che, come già accennato, può anche essere utilizzato a fini creativi.
 
-\section{Vantaggi, svantaggi e future migliorie}
+\section{Vantaggi, svantaggi e future migliorie} %MIGLIORIE? CHE LINGUA è?
 
 \subsection{$x, y, \Delta z$}
-    Lo strumento nasce per avere una scientificità nella posizione del panorama stereo. Di conseguenza sarebbe opportuno approcciare ad uno strumento "scientifico" - se non per scopi creativi - con un metodo altrettanto "scientifico".
+    Lo strumento nasce per avere una scientificità (NON C'è NIENTE DI SCIENTIFICO! È UN PANNER) nella posizione del panorama stereo. Di conseguenza sarebbe opportuno approcciare ad uno strumento "scientifico" - se non per scopi creativi - con un metodo altrettanto "scientifico".
     Durante la prima applicazione del panner, non disponendo di misure precise di distanze $x, y, \Delta z$ , i risultati sono stati buoni, ma comunque con un margine di errore - nel nostro caso - trascurabile.
     Fatto sta che per ricavare tali misure è stato necessario non solo fare i rilievi delle distanze sul posto, ma anche fare un disegno tecnico della realtà di riferimento. Conseguentemente, in alcune situazioni potrebbe risultare scomodo utilizzare questo strumento se non si hanno degli adeguati strumenti di misurazione o delle adeguate competenze per fare un disegno tecnico. All'atto pratico il calcolo di  $x, y, \delta z$, però, è l'unico scoglio da superare nell'utilizzo del Multipanner.
 
