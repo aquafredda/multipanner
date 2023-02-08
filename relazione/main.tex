@@ -204,7 +204,7 @@ with {
 \begin{lstlisting}
 att(sig,dst) = output(sig,dst)
 with{
-    //Leq=Lrif−20*Log10(r/rrif)
+    //Leq=Lrif-20*Log10(r/rrif)
     output(sig,dst) = sig * (100 - 20*log10(dst/0.1))/100;
 };
 \end{lstlisting}
