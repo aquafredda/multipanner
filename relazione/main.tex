@@ -202,7 +202,7 @@ with {
     
 \subsection{L'attenuazione}
     Altro dato importante è l'attenuazione del segnale in base alla distanza. Approssimativamente sappiamo che l'attenuazione è pari a 6 dB per ogni raddoppio della distanza. La nostra formula di attenuazione, ovviamente, è comunque approssimativa in quanto l'attenuazione non avviene linearmente per tutto lo spettro di frequenze della sorgente. Inoltre, la composizione dello spazio acustico e tutti i materiali influiscono molto sull'attenuazione. Poiché stiamo costruendo un modello matematico ideale, adoperiamo una formula di attenuazione che approssimi al meglio la resa sonora in un ambiente ideale. Nel nostro caso\\
-    $$Att = \biggl({100 - 20*log_{10}(dst/0.1)\over100} \biggr)$$
+    $$Att = \biggl({100 - 20*log_{10}(\frac{dst}{0.1})\over100} \biggr)$$
 \begin{lstlisting}
 att(sig,dst) = output(sig,dst)
 with{
