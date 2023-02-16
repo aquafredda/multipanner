@@ -123,7 +123,7 @@ acarnot(l1,l2,l3) = acos((l1 ^ 2 + l2 ^ 2 - l3 ^ 2)/(2 * l1 * l2)) : float;
 lcarnot(l1,l2,rad) = sqrt((l1^2) + ((l2^2) - 2*(l1) * (l2) * cos(rad))) : float;
 
 //simulatore figura polare
-ppattern(x,pp,inc,dvg) = x <: ((1-pp) * _) + (pp * _ * cos(inc))*cos(dvg);
+ppattern(x,pp,inc) = ((1-pp) * x) + (pp * x * cos(inc));
     \end{lstlisting}
     
     
@@ -214,38 +214,38 @@ with{
 \subsection{Il panning e la funzione main}
 Definiamo l'ultima funzione panner che ci permette di simulare la figura polare cardioide e omnidirezionale. 
 \begin{lstlisting}
-panner(sig,pp,inc,dvg) = pan(sig,pp,inc,dvg)
+panner(sig,pp,inc) = pan(sig,pp,inc)
 with {
-    pan(sig,pp,inc,dvg) = ppattern(sig,pp,inc,dvg); 
+    pan(sig,pp,inc) = ppattern(sig,pp,inc); 
 };
 \end{lstlisting}
 
 Come ultima cosa racchiudiamo tutte le funzioni precedentemente definite in un'unica funzione main "multipanner".
 
 \begin{lstlisting}
-multipanner(sig,cd,da,ab,dst,dvg,pp) = l(sig,pp,incL,dvg,dstL), r(sig,pp,incR,dvg,dstR)
+multipanner(sig,cd,da,ab,dst,dvg,pp) = l(sig,pp,totangleL,dstL), r(sig,pp,totangleR,dstR)
 with{
-    //angolo dal centro
+    //radianti dal centro
     radL = dst2arad(cd,da,ab);
-    //a sinistra avremo l'angolo supplementare
     radR = radL : rad2deg : (_-180) : deg2rad;
 
-    //calcolo angolo di incidenza su destra e sinistra
-    incL = radmicmain(cd,da,ab,dst,radL);
-    incR = radmicmain(cd,da,ab,dst,radR);
+    incL = radmicmain(cd,da,ab,dst,radL) : rad2deg;
+    incR = radmicmain(cd,da,ab,dst,radR) : rad2deg;
 
-    //calcolo distanza effettiva sulla capsula di destra e quella di sinistra
     dstL = dstmicmain(cd,da,ab,dst,radL);
     dstR = dstmicmain(cd,da,ab,dst,radR);
 
-    //calcolo finale ed applicazione del panning, dei delay e dell'attenuazione sia su L che su R.
-    l(sig,pp,incL,dvg,dstL) = panner(sig,pp,incL,dvg) : delaysig(_,dstL) : att(_,dstL);
-    r(sig,pp,incR,dvg,dstR) = panner(sig,pp,incR,-dvg) : delaysig(_,dstR) : att(_,dstR);
+    totangleL = incL, dvg : + : deg2rad;
+    totangleR = incR, dvg : + : deg2rad;
+
+    l(sig,pp,totangleL,dstL) = panner(sig,pp,totangleL) : delaysig(_,dstL) : att(_,dstL);
+    r(sig,pp,totangleR,dstR) = panner(sig,pp,totangleR) : delaysig(_,dstR) : att(_,dstR);
 };
 
+//process = multipanner; OGGETTO MAX
 process = multipanner(_,cd, da, ab, dst, dvg, pp);
 \end{lstlisting}
-\section{Perché adoperare il ``multipanner''}
+\section{Perché utilizzare il ``multipanner''}
     
     Un panner tradizionale LR ha come unica variabile la differenza d'ampiezza tra sinistra a destra. È facile intuire che questo potrebbe essere molto limitante in quanto non ci da una informazione stereofonica verosimile, o per lo meno che ci permette di effettuare un posizionamento nello spazio che riesca a far ``dialogare'' lo spot con la coppia main. Il panner oggetto di ricerca, invece, riesce a far comunicare lo spot con il main inserendo delle variabili spaziali. 
     Queste, rielaborate, ricostruiscono matematicamente parte di quello che succederebbe se riprendessimo la sorgente in quel determinato punto $[x, y, \Delta z]$ attraverso la coppia main. 
