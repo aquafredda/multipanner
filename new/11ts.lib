@@ -1,6 +1,10 @@
 import("stdfaust.lib");
 ts = library("12ts.lib");
 
+nsum = + / sqrt(2);
+        ndiff = - / sqrt(2);
+        sdmx =  _, _ <: nsum, ndiff; //MAIN
+
 
 deg2rad = * (ma.PI/180);
 rad2deg = * (180/ma.PI);
@@ -15,4 +19,4 @@ acarnot(l1,l2,l3) = acos((l1 ^ 2 + l2 ^ 2 - l3 ^ 2)/(2 * l1 * l2)) : float;
 lcarnot(l1,l2,rad) = sqrt((l1^2) + ((l2^2) - 2*(l1) * (l2) * cos(rad))) : float;
 
 //simulatore figura polare
-ppattern(x,pp,inc,dvg) = x <: ((1-pp) * _) + (pp * _ * cos(inc))*cos(dvg);
+ppattern(x,pp,inc) = ((1-pp) * x) + (pp * x * cos(inc));
