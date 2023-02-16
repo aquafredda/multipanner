@@ -196,7 +196,7 @@ delaysig(sig,dst) = output(sig,delinsamples)
 with {
     sspeed = 321;
     delinsamples = ((dst/100)/sspeed)*ma.SR : int;
-    output(sig,delinsamples) = sig : de.delay(10000,delinsamples);
+    output(sig,delinsamples) = sig : de.sdelay(10000,256,delinsamples);
 };
     \end{lstlisting}
     
