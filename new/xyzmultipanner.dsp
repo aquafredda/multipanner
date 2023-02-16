@@ -4,9 +4,9 @@ declare author "Gabriele Acquafredda";
 
 import("12ts.lib"); 
 
-pp = hslider("[00]Mic Mode (0 Omni | 0.5 Cardioid)",0,0,0.5,0.5);
-dst = hslider("[01]Distance Between Microphones in cm",17,10,1000,1) : si.smoo; 
-dvg = hslider("[02]Divergence in degrees",55,0,+90,1) : ts.deg2rad : si.smoo; //apertura
+pp = hslider("[00]Mic Mode (0 Omni | 0.5 Cardioid | 1 8.figure)",0,0,1,0.1);
+dst = hslider("[01]Distance Between Microphones in cm",17,17,1000,1) : si.smoo; 
+dvg = hslider("[02]Divergence in degrees",55,0,+90,1) : si.smoo; //apertura
 cd = hslider("[03]X in cm",0,-1000,1000,1) : si.smoo ;
 da = hslider("[03]Y in cm",100,0,1000,1) : si.smoo : max(ma.EPSILON);
 ab = hslider("[03]Z in cm",100,5,1000,1) : si.smoo : max(ma.EPSILON);
@@ -39,24 +39,22 @@ with{
 //ANGOLO DI INCIDENZA DELLA SORGENTE SU UNA CAPSULA
 radmicmain(cd,da,ab,dst,rad) = inc(dst,dstcap,cb)
 with{
-    //betaL = acos(( ((pdismic/2)^2) + (disL)^2 - pdissig^2 ) / (2*(pdismic/2)*disL)) : rad2deg;
     cb = xyz2dst(cd,da,ab);
     dstcap = dstmicmain(cd,da,ab,dst,rad);
-    //angolo di incidenza sulla capsula
     
     inc(dst,dstcap,cb) = ts.acarnot(dst/2,dstcap,cb) : ts.rad2deg : (90-_) : ts.deg2rad;
 };
 
-panner(sig,pp,inc,dvg) = pan(sig,pp,inc,dvg)
+panner(sig,pp,inc) = pan(sig,pp,inc)
 with {
-    pan(sig,pp,inc,dvg) = ppattern(sig,pp,inc,dvg); 
+    pan(sig,pp,inc) = ppattern(sig,pp,inc); 
 };
 
 delaysig(sig,dst) = output(sig,delinsamples)
 with {
     sspeed = 321;
     delinsamples = ((dst/100)/sspeed)*ma.SR : int;
-    output(sig,delinsamples) = sig : de.delay(10000,delinsamples);
+    output(sig,delinsamples) = sig : de.sdelay(10000,256,delinsamples);
 };
 
 att(sig,dst) = output(sig,dst)
@@ -65,21 +63,24 @@ with{
     output(sig,dst) = sig * (100 - 20*log10(dst/0.1))/100;
 };
 
-multipanner(sig,cd,da,ab,dst,dvg,pp) = l(sig,pp,incL,dvg,dstL), r(sig,pp,incR,dvg,dstR)
+multipanner(sig,cd,da,ab,dst,dvg,pp) = l(sig,pp,totangleL,dstL), r(sig,pp,totangleR,dstR)
 with{
     //radianti dal centro
     radL = dst2arad(cd,da,ab);
     radR = radL : rad2deg : (_-180) : deg2rad;
 
-    incL = radmicmain(cd,da,ab,dst,radL);
-    incR = radmicmain(cd,da,ab,dst,radR);
+    incL = radmicmain(cd,da,ab,dst,radL) : rad2deg;
+    incR = radmicmain(cd,da,ab,dst,radR) : rad2deg;
 
     dstL = dstmicmain(cd,da,ab,dst,radL);
     dstR = dstmicmain(cd,da,ab,dst,radR);
 
+    totangleL = incL, dvg : + : deg2rad;
+    totangleR = incR, dvg : + : deg2rad;
 
-    l(sig,pp,incL,dvg,dstL) = panner(sig,pp,incL,dvg) : delaysig(_,dstL) : att(_,dstL);
-    r(sig,pp,incR,dvg,dstR) = panner(sig,pp,incR,-dvg) : delaysig(_,dstR) : att(_,dstR);
+    l(sig,pp,totangleL,dstL) = panner(sig,pp,totangleL) : delaysig(_,dstL) : att(_,dstL);
+    r(sig,pp,totangleR,dstR) = panner(sig,pp,totangleR) : delaysig(_,dstR) : att(_,dstR);
 };
 
-process = multipanner(no.pink_noise,cd, da, ab, dst, dvg, pp);
+//process = _, cd, da, ab, dst, dvg, pp : multipanner;
+process = multipanner; //OGGETTO MAX
