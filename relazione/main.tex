@@ -83,9 +83,24 @@ backgroundcolor=\color{lbcolor},
 \section{Modello Matematico}
 
     \subsection{Differenze con il Modello Fisico}
-    È importante premettere che la presente ricerca riguarda un modello matematico e non fisico. La differenza sostanziale riguarda il fatto che un modello matematico rappresenta una versione semplificata e immaginaria della porzione di mondo da studiare, in cui è possibile effettuare dei calcoli esatti. Lo scopo di un modello matematico è quello di effettuare una rappresentazione sufficientemente fedele a quello che è un fenomeno reale. Nel modello matematico, essendoci anche una semplificazione, si tengono in considerazione solo parte dei fenomeni che avvengono realmente. Il modello matematico qui descritto, difatti, non considera parte dei fenomeni legati soprattutto alla composizione dello spazio acustico di riferimento. Di seguito si parlerà, ad esempio, di velocità del suono e di attenuazione al variare della distanza dello SPOT, emulando solo parte del comportamento effettivo e fornendo comunque un'approssimazione di quello che succede realmente.
+    È importante premettere che la presente ricerca riguarda un modello matematico e non fisico. La differenza sostanziale riguarda il fatto che un modello matematico rappresenta una versione semplificata
+    
+    % mo, caro gabriele, il modello matematico può essere così complesso da non esistere nel mondo fisico. non mi azzarderei a dire che matematico significa più semplice di fisico. Il modello è matematico per il solo fatto che non vuole, per ora, contemplare implementazioni fisiche. 
+    
+     e immaginaria della porzione di mondo da studiare, in cui è possibile effettuare dei calcoli esatti. Lo scopo di un modello matematico è quello di effettuare una rappresentazione sufficientemente fedele a quello che è un fenomeno reale.
+     
+     % no, quello è il modello fisico. il modello matematico è astratto, non ha legami con il mondo reale, altrimenti sarebbe un modello fisico. 
+     
+     Nel modello matematico, essendoci anche una semplificazione, si tengono in considerazione solo parte dei fenomeni che avvengono realmente. % no
+     
+     Il modello matematico qui descritto, difatti, non considera parte dei fenomeni legati soprattutto alla composizione dello spazio acustico di riferimento. Di seguito si parlerà, ad esempio, di velocità del suono e di attenuazione al variare della distanza dello SPOT, emulando solo parte del comportamento effettivo e fornendo comunque un'approssimazione di quello che succede realmente.
     \subsection{Le 3 dimensioni}
-    Il panner tradizionale LR ragiona sulla differenza di ampiezza tra L e R. Nel nostro caso, abbiamo la necessità di costruire una mappa che sia tridimensionale per poi applicarla su ciascuno SPOT. Preso, quindi, come riferimento il punto $\left[0,0,0\right]$, nonché il centro della nostra coppia spaziata e preso un punto dello spazio che identifica il nostro microfono spot $\left[x_a,y_a,\Delta z_a\right]$, dobbiamo permettere al nostro programma di Faust di calcolare in autonomia la distanza effettiva tra $\left[0,0,0\right]$ e $\left[x_a,y_a,\Delta z_a\right]$ e l'angolo di incidenza azimutale. Per questa operazione, disponiamo un semplice disegno tecnico che descrive la situazione:
+    Il panner tradizionale LR ragiona sulla differenza di ampiezza tra L e R. Nel nostro caso, abbiamo la necessità di costruire una mappa che sia tridimensionale per poi applicarla su ciascuno SPOT. Preso, quindi, come riferimento il punto $\left[0,0,0\right]$, nonché il centro della nostra coppia spaziata e preso un punto dello spazio che identifica il nostro microfono spot $\left[x_a,y_a,\Delta z_a\right]$, dobbiamo permettere al nostro programma di Faust 
+    
+    % bo, mi sembra un linguaggio un po troppo da canale5… dobbiamo permettere al nostro programma di faust… è una calcolatrice, non gli stai permettendo nulla. fa solo calcoli. 
+    
+    
+    di calcolare in autonomia la distanza effettiva tra $\left[0,0,0\right]$ e $\left[x_a,y_a,\Delta z_a\right]$ e l'angolo di incidenza azimutale. Per questa operazione, disponiamo un semplice disegno tecnico che descrive la situazione:
 
     \begin{figure}[H]
         \centering
@@ -93,17 +108,23 @@ backgroundcolor=\color{lbcolor},
          \caption{\label{fig1}Assonometria}
     \end{figure}
 
-    Per capire meglio la problematica, quindi, costruiamo una piramide a base di triangolare, dove gli estremi contrassegnati con le lettere $B$ e $C$ rappresentano rispettivamente il centro della coppia spaziata e la posizione dello spot. Così facendo, nel nostro programma diamo in input le tre dimensioni $x, y, \Delta z$ che in termini geometrici saranno tradotte in
+    Per capire meglio la problematica, quindi, costruiamo una piramide a base triangolare, dove gli estremi contrassegnati con le lettere $B$ e $C$ rappresentano rispettivamente il centro della coppia spaziata e la posizione dello spot. Così facendo, nel nostro programma diamo in input le tre dimensioni $x, y, \Delta z$ che in termini geometrici saranno tradotte in
     $$x = CD$$
     $$y = DA$$
     $$z = AB$$
     Riusciamo quindi a calcolarci la distanza $CB$ attraverso l'applicazione del teorema di Pitagora.
-    $$CB = \sqrt{AB^2 + CA ^ 2}$$
+    %$$CB = \sqrt{AB^2 + CA ^ 2}$$
+    
+    % gabriele… con tutto il sacramento che smuove scagliola nelle sue lezioni, veramente gli vuoi scrivere la formula del teorema di pitagora? 
+    
+    
     Per conoscere invece l'angolo di incidenza azimutale, ci serviamo dell'applicazione del teorema di Pitagora e del teorema del coseno
     $$BD = \sqrt{AD^2 + BA ^ 2}$$
     $$\widehat{CBD} = arccos \biggl( {CB ^ 2 + BD ^ 2 - CD ^ 2\over 2 * CB * BD} \biggr)$$
 
-    Siccome il teorema di pitagora e il teorema del coseno sono ricorrenti nella formalizzazione del panner, costruiamo delle funzioni matematiche da richiamare dalla nostra libreria di Faust "11ts.lib". In questa libreria verranno comprese anche altre funzioni matematiche ricorrenti.
+    Siccome il teorema di pitagora e il teorema del coseno sono ricorrenti nella formalizzazione del panner, costruiamo delle funzioni matematiche da richiamare dalla libreria di Faust "11ts.lib". In questa libreria verranno comprese anche altre funzioni matematiche ricorrenti.
+    
+    % elimina tutti i nostra noi, io tu… mammeta… se vuoi parlare della libreria prima la presenti e poi la usi, ma non puoi dire la nostra libreria. 
     
     \begin{lstlisting}
 import("stdfaust.lib");
@@ -160,7 +181,7 @@ with{
     \end{figure}
 
     Conseguentemente il punto $C$ diventerà il centro della nostra coppia main. $CB$ quindi è la distanza tra il centro della coppia main e lo spot che vogliamo pannare.
-    Ora è necessario effettuare tutti i calcoli trigonometrici per far si che L e R risultino due entità a parte. Questa operazione è il fulcro del nostro progetto, dato che ci permette di formalizzare, in seguito quella che è la vera differenza di fase, ampiezza e tempo tra il canale di sinistra e il canale di destra, in modo da effettuare un posizionamento nell'immagine stereofonica il più fedele possibile. Consideriamo di star comunque costruendo un modello matematico e non fisico: riusciamo quindi ad emulare solo parte del comportamento del nostro luogo fisico, tralasciando però, ad esempio, l'interazione della sorgente con l'ambiente. Le finalità del progetto quindi sono più chiare: non è ovviamente possibile simulare completamente un comportamento non deterministico in maniera deterministica.
+    Ora è necessario effettuare tutti i calcoli trigonometrici per far si che L e R risultino due entità a parte. Questa operazione è il fulcro del nostro progetto, dato che ci permette di formalizzare, in seguito quella che è la vera differenza di fase, ampiezza e tempo tra il canale di sinistra e il canale di destra, in modo da effettuare un posizionamento nell'immagine stereofonica il più fedele possibile. %Consideriamo di star comunque costruendo un modello matematico e non fisico: riusciamo quindi ad emulare solo parte del comportamento del nostro luogo fisico, tralasciando però, ad esempio, l'interazione della sorgente con l'ambiente. Le finalità del progetto quindi sono più chiare: non è ovviamente possibile simulare completamente un comportamento non deterministico in maniera deterministica.
     Ora quindi richiamiamo le funzioni già adoperate in precedenza per calcolarci $LB$ e $RB$ \\
     
     \begin{lstlisting}
@@ -189,7 +210,7 @@ with{
 
     La parte dove si fa la differenza $(90-_)$ è fondamentale in quanto, matematicamente, la figura polare cardioide, nella sua definizione, è orientata sull'asse x. Quindi è necessario correggere l'angolo in base a questo dato.\\
 \subsection{Il ritardo tra i due microfoni main}
-    La velocità del suono influisce sulle differenze di tempo, quindi è necessario costruire una funzione che, prese in input le distanze tra la sorgente e ciascuna capsula microfonica, calcoli un ritardo attraverso un valore di velocità arbitrario, che in questo caso sarà $321 m/s$
+    La velocità del suono influisce sulle differenze di tempo, quindi è necessario costruire una funzione che, prese in input le distanze tra la sorgente e ciascuna capsula microfonica, calcoli un ritardo attraverso un valore di velocità arbitrario, che in questo caso sarà $321 m/s$ % devi dire che è uno degli standard che si una negli interni auditorium
 
     \begin{lstlisting}
 delaysig(sig,dst) = output(sig,delinsamples)
@@ -247,7 +268,11 @@ process = multipanner(_,cd, da, ab, dst, dvg, pp);
 \end{lstlisting}
 \section{Perché utilizzare il ``multipanner''}
     
-    Un panner tradizionale LR ha come unica variabile la differenza d'ampiezza tra sinistra a destra. È facile intuire che questo potrebbe essere molto limitante in quanto non ci da una informazione stereofonica verosimile, o per lo meno che ci permette di effettuare un posizionamento nello spazio che riesca a far ``dialogare'' lo spot con la coppia main. Il panner oggetto di ricerca, invece, riesce a far comunicare lo spot con il main inserendo delle variabili spaziali. 
+    Un panner tradizionale LR ha come unica variabile la differenza d'ampiezza tra sinistra a destra. È facile intuire che questo potrebbe essere molto limitante in quanto non ci da una informazione stereofonica verosimile,
+    
+    % no, semplicemente non fornisce alcuna informazione stereofonica.
+    
+     o per lo meno che ci permette di effettuare un posizionamento nello spazio che riesca a far ``dialogare'' lo spot con la coppia main. Il panner oggetto di ricerca, invece, riesce a far comunicare lo spot con il main inserendo delle variabili spaziali. 
     Queste, rielaborate, ricostruiscono matematicamente parte di quello che succederebbe se riprendessimo la sorgente in quel determinato punto $[x, y, \Delta z]$ attraverso la coppia main. 
     Difatti nel nostro caso abbiamo provveduto non solo a differenziare l'ampiezza come avverrebbe con un panner LR, ma anche a fornire una differenza di tempo tra L e R e una spettrale. Così facendo ampliamo le possibilità di utilizzo del progetto che può anche essere utilizzato a fini creativi.
 
@@ -256,10 +281,12 @@ process = multipanner(_,cd, da, ab, dst, dvg, pp);
 \subsection{$x, y, \Delta z$}
     Lo strumento nasce per riprodurre nella maniera più fedele possibile la posizione di uno SPOT del panorama stereo prendendo come riferimento il main. Di conseguenza sarebbe opportuno approcciare a questo strumento in una maniera tale che il ``dialogo'' tra il MAIN e lo SPOT avvenga in maniera corretta.
     Durante la prima applicazione del panner nelle registrazioni orchestrali, non disponendo di misure precise di distanze $x, y, \Delta z$ , i risultati sono stati buoni, ma comunque con un margine di errore - nel nostro caso - trascurabile.
-    Fatto sta che per ricavare tali misure è stato necessario non solo fare i rilievi delle distanze sul posto, ma anche fare un disegno tecnico della realtà di riferimento. Conseguentemente, in alcune situazioni potrebbe risultare scomodo utilizzare questo strumento se non si hanno degli adeguati strumenti di misurazione o delle adeguate competenze per fare un disegno tecnico. All'atto pratico il calcolo di  $x, y, \delta z$, però, è l'unico scoglio da superare nell'utilizzo del Multipanner.
+    Fatto sta che per ricavare tali misure è stato necessario non solo fare i rilievi delle distanze sul posto, ma anche fare un disegno tecnico della realtà di riferimento. Conseguentemente, in alcune situazioni potrebbe risultare scomodo utilizzare questo strumento se non si hanno degli adeguati strumenti di misurazione o delle adeguate competenze per fare un disegno tecnico. All'atto pratico il calcolo di  $x, y, \delta z$, però, è l'unico scoglio da superare nell'utilizzo del Multipanner. % ma il calcolo lo fa l'algoritmo, devi solo immettere le misure, che difficoltà è?
 
 \subsection{La velocità del suono}
-    Nel caso dell'utilizzo dei panner in un multitraccia di un'orchestra, uno dei vantaggi di avere dei delay su L e su R è quello di effettuare automaticamente l'allineamento di tutte le take degli spot verso la coppia main, evitando di effettuare il Ciak. Però c'è da considerare un problema: è abbastanza complesso rilevare la velocità del suono. Difatti noi nella definizione del multipanner, abbiamo utilizzato un valore convenzionale, nonché $321 m/s$. Per offrire una maggiore scientificità allo strumento, sarebbe opportuno anche inserire una funzione di allineamento che rilevi automaticamente la velocità del suono nell'ambiente considerato - anche se non avremo mai una misura precisa al millesimo.
+    Nel caso dell'utilizzo dei panner in un multitraccia di un'orchestra, uno dei vantaggi di avere dei delay su L e su R è quello di effettuare automaticamente l'allineamento di tutti i segnali degli spot verso la coppia main, evitando di effettuare il Ciak. Però c'è da considerare un problema: è abbastanza complesso rilevare la velocità del suono. Difatti noi nella definizione del multipanner, abbiamo utilizzato un valore convenzionale, nonché $321 m/s$. Per offrire una maggiore scientificità allo strumento, sarebbe opportuno anche inserire una funzione di allineamento che rilevi automaticamente la velocità del suono nell'ambiente considerato - anche se non avremo mai una misura precisa al millesimo.
+    
+    % tipo? se proponi una cosa del genere quanto meno devi fare degli esempi. altrimenti vale la regola… lascia perde
     
 \subsection{Comb Filtering}
     Le differenze di tempo tra L e R fanno si che, nel caso della loro somma, ci siano fenomeni di comb filtering. Sarebbe quindi opportuno aggirare almeno parzialmente il problema lavorando a frequenze di campionamento più alte. Per evitare completamente il comb filtering, in una seconda versione, sarà integrata una parte di filtri allpass che correggono le cancellazioni di fase su tutto lo spettro.
