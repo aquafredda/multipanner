@@ -75,10 +75,10 @@ backgroundcolor=\color{lbcolor},
 
 \section{Introduzione}
     Nell'arco della storia dell'elettroacustica ci sono stati svariati momenti e tentativi di rendere un segnale mono, stereo. Sono tutt'ora diversi i metodi applicati per tale proposito, dalla riverberazione allo pseudostereo. Dal brevetto ``Miglioramenti riguardanti la trasmissione, la registrazione e la riproduzione del suono'' di Alan Dower Blumlein, abbiamo assistito a numerose invenzioni per, appunto, fornire un'immagine ``solida'' dei suoni che ci circondano, per fornire loro una tridimensionalità.
-    Allo stesso modo siamo di fronte ad una registrazione orchestrale, ove abbiamo adoperato una coppia principale stereofonica composta da 2 microfoni - qui di seguito MAIN. Per fornire un maggior dettaglio alla ripresa, disponiamo nello spazio una serie di microfoni nella maniera più opportuna. Conseguentemente avremo una coppia di microfoni principale che farà una ripresa di tutto il panorama e dei microfoni che ci danno la possibilità di riprendere ciò che il MAIN non è capace di riprendere con dettaglio. Prendiamo in esame il caso in cui avessimo una coppia ORTF: questa è composta da due microfoni con figura polare cardioide, tra loro distanziati di 17 cm e con una divergenza di 110° circa. La coppia ORTF ``vede'' l'ambiente in maniera tridimensionale, fornendo un'informazione stereofonica
+    Allo stesso modo siamo di fronte ad una registrazione orchestrale, ove abbiamo adoperato una coppia principale stereofonica composta da 2 microfoni - qui di seguito MAIN. Per fornire un maggior dettaglio alla ripresa, disponiamo nello spazio una serie di microfoni nella maniera più opportuna. Conseguentemente avremo una coppia di microfoni principale che farà una ripresa di tutto il panorama e dei microfoni che ci danno la possibilità di riprendere i dettagli che il MAIN non è capace di riprendere. Prendiamo in esame il caso in cui avessimo una coppia ORTF: questa è composta da due microfoni con figura polare cardioide, tra loro distanziati di 17 cm e con una divergenza di 110° circa. La coppia ORTF ``vede'' l'ambiente in maniera tridimensionale, fornendo un'informazione stereofonica
     \footnote{Il termine ``stereofonia'' deriva dal greco antico, in particolare dall'unione delle parole ``sterèos'' (in italiano ``stabile'', ``solido'', ma anche ``spaziale'', ``tridimensionale'') e ``phonè'' (in italiano ``suono'').}
     all'ascoltatore, riuscendo a dare un'immagine di quello che sta succedendo sul palco. Mettendo il caso di avere un'orchestra sinfonica durante la ripresa, nella fase di ascolto riusciremmo a percepire la sezione dei violini sulla sinistra, i contrabbassi sulla destra, i timpani in fondo ecc.
-    Mettiamo caso di aver messo un microfono per enfatizzare e aggiungere dettaglio alla sezione dei violini - di seguito denominato SPOT. Lo SPOT, da solo, non è capace di darci una ``visione'' del posizionamento spaziale dei violini, né tantomeno di mettersi in correlazione con la coppia MAIN ORTF, in quanto monofonico. Il fulcro della ricerca è esattamente questo: creare uno strumento che, dato il segnale monofonico dello spot, data una configurazione MAIN semi-coincidente qualsiasi\footnote{Per configurazione microfonica semi-coincidente si intende una coppia di microfoni con una distanza ravvicinata tra di loro variabile tra i 17 cm e i 30 cm. Lo strumento qui teorizzato da la possibilità di scegliere la distanza e la divergenza tra i microfoni che compongono la coppia} o spaziata con 2 microfoni\footnote{Per configurazione spaziata si intende una configurazione composta da 2 o più microfoni distanziati tra di loro a più di 30 cm. Nella ricerca si puntualizza che lo strumento è adoperabile solo per tecniche microfoniche composte da 2 soli microfoni. Ad esempio la Decca Tree, composta da 3 microfoni, non è contemplata tra le tecniche ove lo strumento può risultare utile} e date le coordinate spaziali del posizionamento dello SPOT (prendendo come riferimento $[0,0,0]$ come MAIN), provveda a creare una stretta correlazione tra la ripresa dello SPOT e quella del MAIN. Vale a dire che con tale metodologia proseguiamo nell'indagare la stereofonia proponendo una modellazione matematica di una coppia stereofonica, cosa su cui la letteratura ci fornisce ben poche idee. Attraverso il modello matematico, quindi, proviamo ad emulare il posizionamento dello SPOT nello spazio, servendoci di poche regole trigonometriche e fisiche applicate alle tre coordinate spaziali.
+    Mettiamo caso di aver messo un microfono per enfatizzare e aggiungere dettaglio alla sezione dei violini - di seguito denominato SPOT. Seppur spazialmente lo SPOT è posizionato sulla destra, durante l'ascolto avvertiremo che, da solo, non è capace di darci una ``visione'' del posizionamento spaziale dei violini, né tantomeno di mettersi in correlazione con la coppia MAIN ORTF, in quanto monofonico. Il fulcro della ricerca è esattamente questo: creare uno strumento che, dato il segnale monofonico dello spot, data una configurazione MAIN semi-coincidente qualsiasi\footnote{Per configurazione microfonica semi-coincidente si intende una coppia di microfoni con una distanza ravvicinata tra di loro variabile tra i 17 cm e i 30 cm. Lo strumento qui teorizzato da la possibilità di scegliere la distanza e la divergenza tra i microfoni che compongono la coppia} o spaziata con 2 microfoni\footnote{Per configurazione spaziata si intende una configurazione composta da 2 o più microfoni distanziati tra di loro a più di 30 cm. Nella ricerca si puntualizza che lo strumento è adoperabile solo per tecniche microfoniche composte da 2 soli microfoni. Ad esempio la Decca Tree, composta da 3 microfoni, non è contemplata tra le tecniche ove lo strumento può risultare utile} e date le coordinate spaziali del posizionamento dello SPOT (prendendo come riferimento $[0,0,0]$ come MAIN), provveda a creare una stretta correlazione tra la ripresa dello SPOT e quella del MAIN. Vale a dire che con tale metodologia proseguiamo nell'indagare la stereofonia proponendo una modellazione matematica di una coppia stereofonica, cosa su cui la letteratura ci fornisce ben poche idee. Attraverso il modello matematico, quindi, proviamo ad emulare il posizionamento dello SPOT nello spazio, servendoci di poche regole trigonometriche e fisiche applicate alle tre coordinate spaziali.
 
 \section{Modello Matematico}
 
@@ -86,8 +86,8 @@ backgroundcolor=\color{lbcolor},
     È importante premettere che la presente ricerca riguarda un modello matematico e non fisico. La differenza sostanziale riguarda il fatto che un modello matematico rappresenta una versione immaginaria della porzione di mondo da studiare, in cui è possibile effettuare dei calcoli esatti. Lo scopo di un modello matematico è quello di effettuare una rappresentazione astratta di un fenomeno, che non ha un'attinenza con la realtà - a differenza del modello fisico.     
      Il modello matematico qui descritto, difatti, non considera parte dei fenomeni legati soprattutto alla composizione dello spazio acustico di riferimento. Di seguito si parlerà, ad esempio, di velocità del suono e di attenuazione al variare della distanza dello SPOT, emulando solo parte del comportamento effettivo e fornendo comunque un'approssimazione di quello che succede realmente.
     \subsection{Le 3 dimensioni}
-    Il panner tradizionale LR ragiona sulla differenza di ampiezza tra L e R. Nel nostro caso, abbiamo la necessità di costruire una mappa che sia tridimensionale per poi applicarla su ciascuno SPOT. Preso, quindi, come riferimento il punto $\left[0,0,0\right]$, nonché il centro della nostra coppia spaziata e preso un punto dello spazio che identifica il nostro microfono spot $\left[x_a,y_a,\Delta z_a\right]$, il nostro programma scritto con FAUST deve calcolare
-    la distanza effettiva tra $\left[0,0,0\right]$ e $\left[x_a,y_a,\Delta z_a\right]$ e l'angolo di incidenza azimutale. Per questa operazione, disponiamo un semplice disegno tecnico che descrive la situazione:
+    Il panner tradizionale LR ragiona sulla differenza di ampiezza tra L e R. Nel nostro caso, abbiamo la necessità di costruire una mappa che ragioni in tre dimensioni per poi applicarla su ciascuno SPOT. Preso, quindi, come riferimento il punto $\left[0,0,0\right]$, nonché il centro della nostra coppia spaziata e preso un punto dello spazio che identifica il nostro microfono spot $\left[x_a,y_a,\Delta z_a\right]$, l'algoritmo scritto con FAUST calcola
+    la distanza effettiva tra $\left[0,0,0\right]$ e $\left[x_a,y_a,\Delta z_a\right]$ e l'angolo di incidenza azimutale. Per questa operazione, si dispone un disegno tecnico semplificato che descrive la situazione:
 
     \begin{figure}[H]
         \centering
@@ -95,17 +95,17 @@ backgroundcolor=\color{lbcolor},
          \caption{\label{fig1}Assonometria}
     \end{figure}
 
-    Per capire meglio la problematica, quindi, costruiamo una piramide a base triangolare, dove gli estremi contrassegnati con le lettere $B$ e $C$ rappresentano rispettivamente il centro della coppia spaziata e la posizione dello spot. Così facendo, nel nostro programma diamo in input le tre dimensioni $x, y, \Delta z$ che in termini geometrici saranno tradotte in
+    Per capire meglio la problematica, quindi, si rappresenta una piramide a base triangolare, dove gli estremi contrassegnati con le lettere $B$ e $C$ rappresentano rispettivamente il centro della coppia spaziata e la posizione dello spot. Così facendo, nel programma si danno in input le tre dimensioni $x, y, \Delta z$ che nei termini geometrici della figura 1 vengono tradotte in
     $$x = CD$$
     $$y = DA$$
     $$z = AB$$
-    Riusciamo quindi a calcolarci la distanza $CB$ attraverso l'applicazione del teorema di Pitagora.
+    Riusciamo quindi a calcolare la distanza $CB$ attraverso l'applicazione del teorema di Pitagora.
 
-    Per conoscere invece l'angolo di incidenza azimutale, ci serviamo dell'applicazione del teorema di Pitagora e del teorema del coseno
+    Per conoscere invece l'angolo di incidenza azimutale, si applica il teorema di Pitagora e del teorema del coseno
     $$BD = \sqrt{AD^2 + BA ^ 2}$$
     $$\widehat{CBD} = arccos \biggl( {CB ^ 2 + BD ^ 2 - CD ^ 2\over 2 * CB * BD} \biggr)$$
 
-    Poiché il teorema di Pitagora e quello del coseno sono ricorrenti nelle funzioni che formalizzano il panner, dichiariamo una libreria apposita per tutte le funzioni matematiche denominandola ``11ts.lib'' e definendola così:
+    Poiché il teorema di Pitagora e quello del coseno sono ricorrenti nelle funzioni che formalizzano il panner, si dichiara una libreria apposita per tutte le funzioni matematiche denominata ``11ts.lib'', definita così:
     
     \begin{lstlisting}
 import("stdfaust.lib");
@@ -129,8 +129,8 @@ ppattern(x,pp,inc) = ((1-pp) * x) + (pp * x * cos(inc));
     \end{lstlisting}
     
     
-    In tale maniera costruiamo un codice pulito e riutilizzabile per qualsiasi nostro progetto.
-    Difatti nel nostro progetto di Faust avremo la seguente situazione:
+    In tale maniera si ha la possibilità di scrivere un codice pulito e riutilizzabile per qualsiasi progetto.
+    Difatti nel progetto di Faust si avrà la seguente situazione:
     
     \begin{lstlisting}
 //OUTPUT DISTANZA REALE TRA I MICROFONI SULLE TRE COORDINATE
@@ -153,7 +153,7 @@ with{
 
     \subsection{La coppia main}
     
-    Finora il main è stato considerato come un unico microfono, però, come ben chiaro, il progetto è finalizzato ad avere come main una coppia spaziata. Per comodità consideriamo ora la planimetria del progetto.
+    Finora il main è stato considerato come un unico microfono, però, come ben chiaro, il progetto è finalizzato ad avere come main una coppia spaziata. Per comodità si considera ora la planimetria del progetto piuttosto che la proiezione assonometrica.
 
     \begin{figure}[H]
         \centering
@@ -161,9 +161,9 @@ with{
          \caption{\label{fig2}Planimetria}
     \end{figure}
 
-    Conseguentemente il punto $C$ diventerà il centro della nostra coppia main. $CB$ quindi è la distanza tra il centro della coppia main e lo spot che vogliamo pannare.
-    Ora è necessario effettuare tutti i calcoli trigonometrici per far si che L e R risultino due entità a parte. Questa operazione è il fulcro del nostro progetto, dato che ci permette di formalizzare, in seguito quella che è la vera differenza di fase, ampiezza e tempo tra il canale di sinistra e il canale di destra, in modo da effettuare un posizionamento nell'immagine stereofonica il più fedele possibile.
-    Ora quindi richiamiamo le funzioni già adoperate in precedenza per calcolarci $LB$ e $RB$ \\
+    Conseguentemente il punto $C$ diventa il centro della coppia main. $CB$ quindi rappresenta la distanza tra il centro della coppia main e lo spot che vogliamo posizionare nell'immagine stereo.
+    Ora è necessario effettuare tutti i calcoli trigonometrici per far si che L e R risultino due entità a parte. Questa operazione è il fulcro del nostro progetto, dato che ci permette di formalizzare, in seguito, quella che è la vera differenza di fase, ampiezza e tempo tra il canale di sinistra e il canale di destra, in modo da effettuare un posizionamento nell'immagine stereofonica il più realistico possibile.
+    Ora quindi si richiamano le funzioni già utilizzate in precedenza per calcolarci $LB$ e $RB$ \\
     
     \begin{lstlisting}
 //DISTANZA REALE TRA CIASCUN MIC DELLA COPPIA MAIN E LA SORGENTE
@@ -174,8 +174,8 @@ with{
 };
     \end{lstlisting}
     
-    In tal maniera, definiamo la funzione $dstmicmain$ che richiameremo 2 volte: una per calcolare $LB$ e l'altra per calcolare $RB$.
-    Come ben noto, la sorgente $B$ avrà un angolo di incidenza differente su $L$ e su $R$. Quindi dobbiamo calcolarci anche queste misure adoperando, come in precedenza, il teorema di Carnot.
+    In tal maniera, si definisce la funzione $dstmicmain$ che verrà richiamata 2 volte: una per calcolare $LB$ e l'altra per calcolare $RB$.
+    Come rilevabile dalla figura 2, la sorgente $B$ avrà un angolo di incidenza differente su $L$ e su $R$. Quindi è necessario calcolare anche queste misure adoperando, come in precedenza, il teorema di Carnot.
     \footnote{Ad esempio: consideriamo $CB = 40 cm$, $LR = 20cm$ (quindi $LC=10cm$) e l'angolo $\widehat{BCR} = 135\textdegree$ (così come avviene nella planimetria della Fig. 2). L'angolo d'incidenza su $L$ sarà uguale a $122.88$ e su $R$ sarà $180-36.46=143.54$. Contando che l'orecchio umano è capace di percepire una differenza di un grado frontale - cosa che ovviamente non avviene nel cono di confusione, anche queste piccole differenze aiutano a percepire meglio l'effetto del nostro panner}
     
     \begin{lstlisting}
@@ -203,7 +203,7 @@ with {
     \end{lstlisting}
     
 \subsection{L'attenuazione}
-    Altro dato importante è l'attenuazione del segnale in base alla distanza. Approssimativamente sappiamo che l'attenuazione è pari a 6 dB per ogni raddoppio della distanza. La nostra formula di attenuazione, ovviamente, è comunque approssimativa in quanto l'attenuazione non avviene linearmente per tutto lo spettro di frequenze della sorgente. Inoltre, la composizione dello spazio acustico e tutti i materiali influiscono molto sull'attenuazione. Poiché stiamo costruendo un modello matematico ideale, adoperiamo una formula di attenuazione che approssimi al meglio la resa sonora in un ambiente ideale. Nel nostro caso\\
+    Altro dato importante è l'attenuazione del segnale in base alla distanza. Approssimativamente è noto che l'attenuazione è pari a 6 dB per ogni raddoppio della distanza. La formula di attenuazione qui descritta, ovviamente, è comunque approssimativa in quanto l'attenuazione non avviene linearmente per tutto lo spettro di frequenze della sorgente. Inoltre, la composizione dello spazio acustico e tutti i materiali presenti influiscono molto sull'attenuazione. Poiché il progetto di ricerca punta alla costruzione di un modello matematico ideale, si descrive qui una formula di attenuazione che approssimi al meglio la resa sonora in un ambiente ideale. In questo caso\\
     $$Att = \biggl({100 - 20*log_{10}(\frac{dst}{0.1})\over100} \biggr)$$
 \begin{lstlisting}
 att(sig,dst) = output(sig,dst)
@@ -214,7 +214,7 @@ with{
 \end{lstlisting}
 
 \subsection{Il panning e la funzione main}
-Definiamo l'ultima funzione panner che ci permette di simulare la figura polare cardioide e omnidirezionale. 
+Si definisce l'ultima funzione panner che permette di simulare la figura polare cardioide e omnidirezionale. 
 \begin{lstlisting}
 panner(sig,pp,inc) = pan(sig,pp,inc)
 with {
@@ -222,7 +222,7 @@ with {
 };
 \end{lstlisting}
 
-Come ultima cosa racchiudiamo tutte le funzioni precedentemente definite in un'unica funzione main "multipanner".
+Come ultima cosa si raccolgono tutte le funzioni precedentemente definite in un'unica funzione main "multipanner".
 
 \begin{lstlisting}
 multipanner(sig,cd,da,ab,dst,dvg,pp) = l(sig,pp,totangleL,dstL), r(sig,pp,totangleR,dstR)
